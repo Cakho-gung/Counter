@@ -720,6 +720,10 @@ export default function Loading1() {
     }
 
     if (loadingState === "loading") {
+      const overallTimeout = setTimeout(() => {
+        setLoadingState("transitioning");
+      }, 3000);
+
       let timeoutId: NodeJS.Timeout;
       const tick = () => {
         const delay = 50 + Math.random() * 250; // Random delay between 50ms and 300ms
@@ -745,7 +749,10 @@ export default function Loading1() {
         }, delay);
       };
       tick();
-      return () => clearTimeout(timeoutId);
+      return () => {
+        clearTimeout(timeoutId);
+        clearTimeout(overallTimeout);
+      };
     }
   }, [loadingState]);
   // "Landfilled in the US" — starts from 0 when you arrive
@@ -772,7 +779,10 @@ export default function Loading1() {
         >
           {/* Fixed Title */}
           <div className="absolute left-[80px] top-1/2">
-            <p className="font-medium text-[24px] text-white" style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
+            <p className="font-medium text-[24px] text-white flex items-center gap-[10px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="w-[8px] h-[8px] rounded-full bg-[#FF5927] shadow-[0_0_12px_#FF5927]"></span>
+              Markers landfilled in the US today
+            </p>
           </div>
 
           {/* Moving Counter at the bottom */}
