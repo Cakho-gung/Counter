@@ -29,7 +29,12 @@ const AppRouter = () => {
   const getPath = () => {
     const hash = window.location.hash.replace(/^#/, '');
     if (hash) return hash;
-    const pathname = window.location.pathname;
+    
+    let pathname = window.location.pathname;
+    if (pathname.startsWith('/Counter')) {
+      pathname = pathname.replace('/Counter', '');
+    }
+    
     if (pathname && pathname !== '/') return pathname;
     return '/';
   };
