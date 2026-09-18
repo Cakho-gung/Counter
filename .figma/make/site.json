@@ -1,0 +1,10 @@
+{
+  "description": "Displays a clean, user-friendly numeric counter for tracking counts or progress, ideal for users needing straightforward number updates.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
