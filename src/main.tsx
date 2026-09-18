@@ -26,10 +26,18 @@ const FloatingMenu = ({ path }: { path: string }) => {
 }
 
 const AppRouter = () => {
-  const [path, setPath] = React.useState(window.location.hash.replace(/^#/, '') || '/');
+  const getPath = () => {
+    const hash = window.location.hash.replace(/^#/, '');
+    if (hash) return hash;
+    const pathname = window.location.pathname;
+    if (pathname && pathname !== '/') return pathname;
+    return '/';
+  };
+
+  const [path, setPath] = React.useState(getPath());
 
   React.useEffect(() => {
-    const handleHashChange = () => setPath(window.location.hash.replace(/^#/, '') || '/');
+    const handleHashChange = () => setPath(getPath());
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
