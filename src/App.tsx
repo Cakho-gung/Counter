@@ -126,6 +126,19 @@ function useLiveCounter(initial: number, perSecond: number) {
   return count;
 }
 
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(() =>
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+  );
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [query]);
+  return matches;
+}
+
 import Matter from "matter-js";
 
 // ── Marker Physics Canvas with Matter.js ────────────────────────────────────
@@ -431,8 +444,15 @@ function LucideClockFading() {
   );
 }
 
-function HeaderNavbar({ todayCount }: { todayCount: number }) {
+function HeaderNavbar({ todayCount, loadingState, setLoadingState }: { todayCount: number, loadingState: string, setLoadingState: (s: any) => void }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 960px)");
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setIsLoaded(true), 100);
+    return () => { clearTimeout(t1); };
+  }, []);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -453,34 +473,37 @@ function HeaderNavbar({ todayCount }: { todayCount: number }) {
 
   return (
     <>
-      <div className="w-full h-[120px] shrink-0" />
+      <div className={`w-full shrink-0 ${isMobile ? "h-[136px]" : "h-[120px]"}`} />
 
       <div className="fixed top-0 left-0 w-full flex flex-col items-center z-40 pointer-events-none">
         {/* Top Nav Pill */}
         <div
-          className={`w-full flex justify-center pt-[24px] px-[40px] pointer-events-auto transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+          className={`w-full flex justify-center pointer-events-auto transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+            ${isMobile ? "pt-[68px] px-[16px]" : "pt-[24px] px-[40px]"}
             ${isScrolled ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"}
           `}
         >
-          <div className="bg-white rounded-[999px] w-full max-w-[1280px] flex items-center justify-between px-[24px] py-[12px]" style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+          <div className={`bg-white w-full flex items-center justify-between ${isMobile ? "rounded-[20px] max-w-none px-[16px] py-[10px]" : "rounded-[999px] max-w-[1280px] px-[24px] py-[12px]"}`} style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
             {/* Logo */}
             <div className="flex items-center gap-1 pl-[8px]">
               <span className="font-black text-[28px] tracking-[-1px] text-[#1f1f1f]" style={{ fontFamily: "'Bricolage Grotesque', sans-serif", lineHeight: 1 }}>AusPen</span>
             </div>
 
-            {/* Center Menu */}
-            <div className="bg-[#f5f5f5] rounded-full flex items-center p-[4px] gap-[4px]">
-              <button className="px-[24px] py-[10px] text-[15px] font-medium text-[#4a4a4a] hover:text-[#1f1f1f] cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>Home</button>
-              <button className="px-[24px] py-[10px] text-[15px] font-medium text-[#4a4a4a] hover:text-[#1f1f1f] flex items-center gap-[6px] cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                Shop
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
-              </button>
-              <button className="px-[24px] py-[10px] text-[15px] font-medium text-[#4a4a4a] hover:text-[#1f1f1f] cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>How to Refill</button>
-              <button className="bg-white rounded-full px-[24px] py-[10px] text-[15px] font-bold text-[#1f1f1f] shadow-sm cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>Why AusPen</button>
-            </div>
+            {/* Center Menu — desktop only */}
+            {!isMobile && (
+              <div className="bg-[#f5f5f5] rounded-full flex items-center p-[4px] gap-[4px]">
+                <button className="px-[24px] py-[10px] text-[15px] font-medium text-[#4a4a4a] hover:text-[#1f1f1f] cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>Home</button>
+                <button className="px-[24px] py-[10px] text-[15px] font-medium text-[#4a4a4a] hover:text-[#1f1f1f] flex items-center gap-[6px] cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  Shop
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                </button>
+                <button className="px-[24px] py-[10px] text-[15px] font-medium text-[#4a4a4a] hover:text-[#1f1f1f] cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>How to Refill</button>
+                <button className="bg-white rounded-full px-[24px] py-[10px] text-[15px] font-bold text-[#1f1f1f] shadow-sm cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>Why AusPen</button>
+              </div>
+            )}
 
             {/* Icons */}
-            <div className="flex items-center gap-[12px] text-[#1f1f1f] pr-[8px]">
+            <div className={`flex items-center text-[#1f1f1f] pr-[8px] ${isMobile ? "gap-[8px]" : "gap-[12px]"}`}>
               <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
               </button>
@@ -490,42 +513,136 @@ function HeaderNavbar({ todayCount }: { todayCount: number }) {
               <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></svg>
               </button>
+              {/* Hamburger — mobile only */}
+              {isMobile && (
+                <button className="p-2 hover:bg-gray-100 rounded-full cursor-pointer">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /></svg>
+                </button>
+              )}
             </div>
           </div>
         </div>
 
         {/* Attached Ticker */}
         <div
-          className={`pointer-events-auto bg-[#151d2b] flex items-center justify-center overflow-clip py-[8px] transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] shadow-md relative z-40
-          ${isScrolled ? "w-full max-w-none rounded-none px-[40px]" : "w-[85%] max-w-[1088px] rounded-[0_0_99px_99px] px-[40px]"}
+          onClick={() => { if (loadingState === "loading") setLoadingState("transitioning"); }}
+          className={`pointer-events-auto bg-[#151d2b] flex items-center justify-center overflow-clip shadow-md fixed left-1/2 -translate-x-1/2 z-50 ${isMobile ? "px-[20px]" : "px-[40px]"} py-[8px]
+          ${loadingState === "loading" ? "opacity-100" : (isLoaded ? "opacity-100" : "opacity-0")}
+          ${loadingState === "done" ? "transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]" : "transition-all duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]"}
+          ${loadingState === "loading" ? "w-[100vw] h-[100vh] top-0 rounded-none cursor-pointer max-w-[100vw]" :
+            isMobile
+              ? "w-[100vw] h-[56px] max-w-[100vw] rounded-none top-0"
+              : (isScrolled ? "w-[100vw] h-[56px] max-w-[100vw] rounded-none top-0" : "w-[85%] max-w-[1088px] h-[56px] rounded-[0_0_99px_99px] top-[100px]")}
         `}
-          style={{ gap: "24px", marginTop: isScrolled ? "-100px" : "0px" }}
         >
-          <p className="font-medium text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
-          <div className="shrink-0 flex items-center">
-            <OdometerCounter
-              value={todayCount}
-              color="#FF5927"
-              fontSize={24}
-              fontFamily="'Barlow Condensed', sans-serif"
-              fontWeight={600}
-              letterSpacing="0.04em"
-              card={true}
-              cardColor="white"
-              minDigits={6}
-              nudge={2}
-            />
+          {/* Loading Background Canvas (Rain) - Fixed to viewport, clipped by shrinking parent */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[100vw] h-[100vh] pointer-events-none z-0">
+            <LoadingPhysicsCanvas active={loadingState === "loading"} isMobile={isMobile} />
           </div>
-          <p className="font-medium text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            AusPen's slowing it down. <span style={{ color: "#FF8F27" }}>See how ↓</span>
-          </p>
+
+
+          {/* Ticker content — mobile variant (Vertical to Horizontal Seamless Transform) */}
+          {isMobile ? (
+            <div className="relative z-10 flex items-center justify-between w-full h-full">
+              {/* Left group: Counter + Text. Stacked during loading, inline during bar */}
+              <div className={`relative origin-left flex items-center
+                ${loadingState === "done" ? "transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]" : "transition-all duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]"}
+                ${loadingState === "loading" ? "scale-[1.9]" : "scale-100"}
+              `}>
+                {/* Invisible spacer to reserve width for the flex container so 'See how' aligns properly */}
+                <div className="opacity-0 pointer-events-none flex items-center" aria-hidden="true">
+                  <div className="shrink-0 w-[95px] h-[28px]" /> {/* Approx counter width/height */}
+                  <div className="flex flex-col ml-[12px]">
+                    <p className="font-medium text-[14px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
+                    <p className="font-medium text-[14px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>{`AusPen's slowing it down.`}</p>
+                  </div>
+                </div>
+
+                {/* Actual Animated Content */}
+                <div className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center w-full">
+                  <div className="relative inline-flex items-center">
+                    {/* Initial Load Fade-in Wrapper */}
+                    <div className={`transition-all duration-[800ms] delay-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[20px]"}`}>
+                      <div className={`origin-left transition-transform duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)] ${loadingState === "loading" ? "scale-[1.5]" : "scale-100"}`}>
+                        <OdometerCounter
+                          value={todayCount}
+                          color="#FF5927"
+                          fontSize={20}
+                          fontFamily="'Barlow Condensed', sans-serif"
+                          fontWeight={600}
+                          letterSpacing="0.04em"
+                          card={true}
+                          cardColor="white"
+                          minDigits={6}
+                          nudge={2}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Animated Text: stacked below in loading, inline right in sticky bar */}
+                    <div className={`absolute transition-all duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]
+                      ${loadingState === "loading" ? "left-0 top-[100%] mt-[20px] translate-y-0" : "left-[100%] ml-[12px] top-1/2 -translate-y-1/2"}
+                    `}>
+                      <div className="flex flex-col">
+                        <p className={`font-medium text-[14px] text-white whitespace-nowrap leading-snug transition-all duration-[800ms] delay-[1000ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
+                        <p className={`font-medium text-[14px] text-white whitespace-nowrap leading-snug transition-all duration-[800ms] delay-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "translate-y-[10px] opacity-0"}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>{`AusPen's slowing it down.`}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* "See how ↓" — slides in after loading state ends */}
+              <div className={`shrink-0 transition-all duration-[500ms] delay-[300ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+                ${loadingState !== "loading" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-[20px]"}`}>
+                <span className="font-semibold text-[16px] whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif", color: "#FF8F27" }}>
+                  See how ↓
+                </span>
+              </div>
+            </div>
+          ) : (
+            /* Ticker content — desktop variant */
+            <div className={`relative z-10 flex items-center gap-[24px] transition-transform duration-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${loadingState === "loading" ? "scale-150" : "scale-100"}`}>
+              <div className={`transition-all duration-[800ms] delay-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-[20px] opacity-0"}`}>
+                <p className="font-medium text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
+              </div>
+
+              <div className={`shrink-0 flex items-center transition-all duration-[800ms] delay-[1000ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-[20px] opacity-0"}`}>
+                <OdometerCounter
+                  value={todayCount}
+                  color="#FF5927"
+                  fontSize={24}
+                  fontFamily="'Barlow Condensed', sans-serif"
+                  fontWeight={600}
+                  letterSpacing="0.04em"
+                  card={true}
+                  cardColor="white"
+                  minDigits={6}
+                  nudge={2}
+                />
+              </div>
+
+              <div className={`transition-all duration-[800ms] delay-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-[20px] opacity-0"}`}>
+                <div className="font-medium text-[16px] text-white whitespace-nowrap flex items-center" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <span>{`AusPen's slowing it down.`}</span>
+                  <span
+                    className={`inline-block whitespace-nowrap overflow-hidden transition-all duration-[1500ms] delay-[2800ms] ease-[cubic-bezier(0.25,1,0.5,1)] 
+                    ${isLoaded ? "max-w-[100px] translate-x-0 opacity-100 ml-1" : "max-w-0 translate-x-[20px] opacity-0 ml-0"}`}
+                    style={{ color: "#FF8F27" }}
+                  >
+                    See how ↓
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 }
 
-function LoadingPhysicsCanvas({ active }: { active: boolean }) {
+function LoadingPhysicsCanvas({ active, isMobile }: { active: boolean, isMobile?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const activeRef = useRef(active);
   activeRef.current = active;
@@ -575,8 +692,12 @@ function LoadingPhysicsCanvas({ active }: { active: boolean }) {
       const bodyW = MORIG_W * scale;
       const bodyH = MORIG_H * scale;
 
-      const minX = width * 0.3;
-      const maxX = width * 0.7;
+      let minX = width * 0.3;
+      let maxX = width * 0.7;
+      if (isMobile) {
+        minX = width * 0.55; // Shift to right half
+        maxX = width * 0.95; // Near right edge
+      }
       const x = minX + Math.random() * (maxX - minX);
       const y = -bodyH * (1 + Math.random() * 2);
 
@@ -693,15 +814,16 @@ function LoadingPhysicsCanvas({ active }: { active: boolean }) {
 
 export default function App() {
   const [loadingState, setLoadingState] = useState<"loading" | "transitioning" | "done">("loading");
-  const [curtainState, setCurtainState] = useState<"closed" | "opening" | "opened">("closed");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setCurtainState("opening"), 100);
-    const t2 = setTimeout(() => setCurtainState("opened"), 1100);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
+    if (loadingState === "loading") {
+      const isMobileNow = window.matchMedia("(max-width: 960px)").matches;
+      const t = setTimeout(() => {
+        setLoadingState("transitioning");
+      }, isMobileNow ? 3300 : 4500);
+      return () => clearTimeout(t);
+    }
 
-  useEffect(() => {
     if (loadingState === "transitioning") {
       const t = setTimeout(() => {
         setLoadingState("done");
@@ -720,37 +842,13 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center relative w-full min-h-screen overflow-hidden bg-[#f6f6f6]" data-name="Demo" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      {/* Curtain */}
-      {curtainState !== "opened" && (
-        <div 
-          className="fixed inset-0 z-[60] bg-white transition-transform duration-[1000ms] ease-[cubic-bezier(0.7,0,0.3,1)]"
-          style={{ transform: curtainState === "opening" ? "translateY(100%)" : "translateY(0)" }}
-        />
-      )}
+      {/* Header & Sticky Ticker */}
+      <HeaderNavbar todayCount={todayCount} loadingState={loadingState} setLoadingState={setLoadingState} />
 
-      {/* Loading Overlay */}
-      {loadingState !== "done" && (
-        <div
-          onClick={() => { if (loadingState === "loading") setLoadingState("transitioning"); }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white"
-          style={{
-            cursor: loadingState === "loading" ? "pointer" : "default",
-            clipPath: loadingState === "transitioning" ? "inset(0 0 100% 0)" : "inset(0 0 0 0)",
-            transition: "clip-path 1200ms cubic-bezier(0.7, 0, 0.3, 1)"
-          }}
-        >
-          <LoadingPhysicsCanvas active={loadingState === "loading" && curtainState !== "closed"} />
-        </div>
-      )}
-
-      <div className="w-full flex flex-col">
-        {/* Header & Sticky Ticker */}
-        <HeaderNavbar todayCount={todayCount} />
-
-        {/* Main Content Wrapper */}
-        <div className={`flex flex-col items-center w-full min-h-screen bg-[#f6f6f6] transition-transform duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]
-          ${loadingState === "loading" ? "scale-[1.2]" : "scale-100"}
-        `}>
+      {/* Main Content Wrapper */}
+      <div className={`flex flex-col items-center w-full min-h-screen bg-[#f6f6f6] transition-transform duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]
+        ${loadingState === "loading" ? "scale-[1.2]" : "scale-100"}
+      `}>
 
         {/* Main section */}
         <div className="bg-[#f6f6f6] flex flex-col items-center w-full px-[40px] py-[80px]">
@@ -857,7 +955,6 @@ export default function App() {
 
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
