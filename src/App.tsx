@@ -814,6 +814,7 @@ function LoadingPhysicsCanvas({ active, isMobile }: { active: boolean, isMobile?
 
 export default function App() {
   const [loadingState, setLoadingState] = useState<"loading" | "transitioning" | "done">("loading");
+  const isMobile = useMediaQuery("(max-width: 960px)");
 
   useEffect(() => {
     if (loadingState === "loading") {
@@ -851,22 +852,22 @@ export default function App() {
       `}>
 
         {/* Main section */}
-        <div className="bg-[#f6f6f6] flex flex-col items-center w-full px-[40px] py-[80px]">
+        <div className="bg-[#f6f6f6] flex flex-col items-center w-full px-[20px] py-[40px] lg:px-[40px] lg:py-[80px]">
           <div className="flex flex-col gap-[40px] items-start max-w-[1280px] w-full">
 
             {/* Heading */}
             <div className="flex flex-col gap-[16px] items-start w-full">
               <div className="bg-[#ff8f27] px-[16px] py-[8px] rounded-full shrink-0">
-                <p className="font-medium text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>Departures — to landfill</p>
+                <p className="font-medium text-[14px] lg:text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>Departures — to landfill</p>
               </div>
-              <div className="flex items-start w-full" style={{ gap: "24px 40px", columnGap: "40px", rowGap: "24px" }}>
-                <p className="font-bold text-[#ff8f27] text-[56px] tracking-[-1.12px] whitespace-nowrap leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>13 markers</p>
+              <div className="flex flex-col lg:flex-row items-start w-full lg:gap-x-[40px] gap-y-[12px] lg:gap-y-[24px]">
+                <p className="font-bold text-[#ff8f27] text-[48px] lg:text-[56px] tracking-[-1.12px] whitespace-nowrap leading-[1.1] lg:leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>13 markers</p>
                 <div className="flex flex-1 flex-col items-start min-w-0">
-                  <p className="font-bold text-[#1f1f1f] text-[56px] tracking-[-1.12px] leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>are discarded</p>
-                  <div className="flex flex-wrap gap-[17px] items-start w-full" style={{ padding: 0 }}>
+                  <p className="font-bold text-[#1f1f1f] text-[48px] lg:text-[56px] tracking-[-1.12px] leading-[1.1] lg:leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>are discarded</p>
+                  <div className="flex flex-col lg:flex-row lg:flex-wrap gap-[12px] lg:gap-[17px] items-start w-full" style={{ padding: 0 }}>
                     <div className="flex flex-col gap-[4px] shrink-0">
-                      <p className="font-bold text-[#1f1f1f] text-[56px] tracking-[-1.12px] leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>every second</p>
-                      <div className="h-[17px] relative w-[215px]">
+                      <p className="font-bold text-[#1f1f1f] text-[48px] lg:text-[56px] tracking-[-1.12px] leading-[1.1] lg:leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>every second</p>
+                      <div className="h-[17px] relative w-[180px] lg:w-[215px]">
                         <div className="absolute inset-[-14.71%_-1.16%]">
                           <svg className="block size-full" fill="none" height="22" preserveAspectRatio="none" viewBox="0 0 220 22.0001" width="220">
                             <path d={svgPaths.p366c6080} stroke="#FF8F27" strokeLinecap="round" strokeWidth="5" />
@@ -875,7 +876,7 @@ export default function App() {
                       </div>
                     </div>
                     <div className="flex items-center justify-center shrink-0">
-                      <p className="font-bold text-[#1f1f1f] text-[56px] tracking-[-1.12px] leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>in the US.</p>
+                      <p className="font-bold text-[#1f1f1f] text-[48px] lg:text-[56px] tracking-[-1.12px] leading-[1.1] lg:leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>in the US.</p>
                     </div>
                   </div>
                 </div>
@@ -883,48 +884,52 @@ export default function App() {
             </div>
 
             {/* Counter card */}
-            <div className="flex flex-wrap gap-[0px_24px] items-start justify-end w-full">
+            <div className="flex flex-col lg:flex-row gap-[24px] items-start justify-end w-full">
               {/* placeholder spacer */}
-              <div className="flex items-center opacity-0 pr-[32px] h-px w-[304px]">
+              <div className="hidden lg:flex items-center opacity-0 pr-[32px] h-px w-[304px]">
                 <div className="bg-[#454545] flex-1 h-full rounded-[16px]" />
               </div>
               {/* purple card */}
-              <div className="flex-1 max-w-[954px] min-w-[636px] relative rounded-[24px]" style={{ overflow: "hidden", background: "#6D57D9" }}>
+              <div className="flex-1 w-full lg:max-w-[954px] min-w-0 lg:min-w-[636px] relative rounded-[24px]" style={{ overflow: "hidden", background: "#6D57D9" }}>
                 <MarkerPhysicsCanvas active={loadingState === "done"} />
-                <div className="flex flex-col items-center size-full pb-[56px] pt-[40px] px-[40px] gap-[32px]" style={{ position: "relative", zIndex: 1 }}>
+                <div className="flex flex-col items-start lg:items-center size-full py-[32px] px-[20px] lg:pb-[56px] lg:pt-[40px] lg:px-[40px] gap-[32px]" style={{ position: "relative", zIndex: 1 }}>
                   {/* Row 1: landfilled */}
-                  <div className="flex flex-wrap gap-[24px] items-end justify-end pb-[32px] w-full">
-                    <div className="flex flex-1 flex-col gap-[8px] items-start min-w-[230px]">
-                      <div className="font-medium text-[#fafafa] text-[24px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <div className="flex flex-col lg:flex-row lg:flex-wrap gap-[16px] lg:gap-[24px] items-start lg:items-end justify-end pb-[16px] lg:pb-[32px] w-full">
+                    <div className="flex flex-1 flex-col gap-[4px] lg:gap-[8px] items-start min-w-0 lg:min-w-[230px]">
+                      <div className="font-medium text-[#fafafa] text-[20px] lg:text-[24px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         <p className="mb-0">Markers landfilled in the US</p>
                       </div>
-                      <div className="flex items-center gap-[8px] py-[4px]">
+                      <div className="flex items-center gap-[8px] py-[4px] opacity-80 lg:opacity-100">
                         <LucideClockFading />
-                        <p className="text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>since you arrived</p>
+                        <p className="text-[14px] lg:text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>since you arrived</p>
                       </div>
                     </div>
-                    <OdometerCounter value={arrivedCount} color="rgb(255,134,42)" fontSize={80} fontFamily="'Barlow Condensed',sans-serif" fontWeight={600} letterSpacing="0.04em" minDigits={6} nudge={4} cardColor="#8066FF" />
+                    <div className="flex justify-end w-full lg:w-auto">
+                      <OdometerCounter value={arrivedCount} color="rgb(255,134,42)" fontSize={isMobile ? 56 : 80} fontFamily="'Barlow Condensed',sans-serif" fontWeight={600} letterSpacing="0.04em" minDigits={6} nudge={4} cardColor="#8066FF" />
+                    </div>
                   </div>
                   {/* Row 2: AusPen saved */}
-                  <div className="flex flex-wrap gap-[24px] items-end justify-end w-full">
-                    <div className="flex flex-1 flex-col gap-[8px] items-start min-w-[230px]">
-                      <p className="font-medium text-[#fafafa] text-[24px] leading-snug w-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>Kept out of landfill by AusPen users</p>
-                      <div className="flex items-center gap-[8px] py-[4px]">
+                  <div className="flex flex-col lg:flex-row lg:flex-wrap gap-[16px] lg:gap-[24px] items-start lg:items-end justify-end w-full">
+                    <div className="flex flex-1 flex-col gap-[4px] lg:gap-[8px] items-start min-w-0 lg:min-w-[230px]">
+                      <p className="font-medium text-[#fafafa] text-[20px] lg:text-[24px] leading-snug w-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>Kept out of landfill by AusPen users</p>
+                      <div className="flex items-center gap-[8px] py-[4px] opacity-80 lg:opacity-100">
                         <LucideClockFading />
-                        <p className="text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>since 2016</p>
+                        <p className="text-[14px] lg:text-[16px] text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>since 2016</p>
                       </div>
                     </div>
-                    <OdometerCounter value={auspenCount} color="#33FF5B" fontSize={80} fontFamily="'Barlow Condensed',sans-serif" fontWeight={600} letterSpacing="0.04em" nudge={4} cardColor="#8066FF" />
+                    <div className="flex justify-end w-full lg:w-auto">
+                      <OdometerCounter value={auspenCount} color="#33FF5B" fontSize={isMobile ? 56 : 80} fontFamily="'Barlow Condensed',sans-serif" fontWeight={600} letterSpacing="0.04em" nudge={4} cardColor="#8066FF" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Bottom section */}
-            <div className="flex gap-[24px] items-end w-full">
-              <div className="flex flex-1 gap-[24px] items-end max-w-[954px] min-w-0">
+            <div className="flex flex-col lg:flex-row gap-[24px] lg:items-end w-full">
+              <div className="flex flex-1 gap-[24px] lg:items-end max-w-[954px] min-w-0">
                 {/* Image */}
-                <div className="flex items-center pr-[32px] shrink-0 w-[304px]">
+                <div className="hidden lg:flex items-center pr-[32px] shrink-0 w-[304px]">
                   <div className="flex flex-1 flex-col items-start min-w-0 overflow-clip rounded-[16px]">
                     <div className="aspect-[1024/976] relative w-full">
                       <img alt="Markers and drawing supplies" className="absolute inset-0 max-w-none object-cover size-full" src={imgImage8} />
@@ -932,22 +937,22 @@ export default function App() {
                   </div>
                 </div>
                 {/* Text + CTA */}
-                <div className="flex flex-1 flex-col gap-[40px] items-start min-w-0">
-                  <div className="max-w-[524px] text-[24px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    <p className="font-medium text-[#9782ff] mb-0">{`That's your impact.`}</p>
+                <div className="flex flex-1 flex-col gap-[24px] lg:gap-[40px] items-start min-w-0">
+                  <div className="w-full lg:max-w-[524px] text-[20px] lg:text-[24px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    <p className="font-medium text-[#8066FF] mb-[8px] lg:mb-0">{`That's your impact.`}</p>
                     <p className="font-medium text-[#1f1f1f]">{`AusPen users have saved 144,000+ from landfill. One refillable marker replaces 80 disposables."`}</p>
                   </div>
-                  <button className="bg-[#ff8f27] rounded-[16px] shrink-0 cursor-pointer" style={{ boxShadow: "0px 4px 3px rgba(0,0,0,0.1), 0px 2px 2px rgba(0,0,0,0.1)" }}>
-                    <div className="flex items-center gap-[8px] px-[24px] py-[12px]">
-                      <p className="font-medium text-[16px] text-center text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>{`There's a Better Way`}</p>
+                  <button className="bg-[#8066FF] rounded-[12px] lg:rounded-[16px] shrink-0 cursor-pointer transition-transform hover:scale-105" style={{ boxShadow: "0px 4px 3px rgba(0,0,0,0.1), 0px 2px 2px rgba(0,0,0,0.1)" }}>
+                    <div className="flex items-center gap-[8px] px-[20px] py-[10px] lg:px-[24px] lg:py-[12px]">
+                      <p className="font-medium text-[14px] lg:text-[16px] text-center text-white whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>{`There's a Better Way`}</p>
                       <IconArrowDown />
                     </div>
                   </button>
                 </div>
               </div>
               {/* Footnotes */}
-              <div className="flex items-center justify-center pr-[16px] shrink-0 w-[304px]">
-                <p className="flex-1 min-w-0 text-[#1f1f1f] text-[14px] opacity-50 leading-snug whitespace-pre-wrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <div className="flex items-start lg:items-center justify-center lg:pr-[16px] shrink-0 w-full lg:w-[304px] mt-[24px] lg:mt-0">
+                <p className="flex-1 min-w-0 text-[#1f1f1f] text-[12px] lg:text-[14px] opacity-50 leading-snug whitespace-pre-wrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   {`Estimated 400 million dry-erase markers discarded annually in the US (widely reported industry estimate) · ~2-week average disposable lifespan · recycling rate ~0.375% (Design Life-Cycle, UC Davis).\n\nBoards are illustrative, driven by the annual estimate (≈12.7 per second). Saved counter: cumulative AusPen user impact since 2016.`}
                 </p>
               </div>

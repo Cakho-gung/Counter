@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Bricolage+Grotesque:wght@400;600;700&family=Sofia+Sans+Extra+Condensed:wght@400;700;900&family=Barlow:wght@400;700;800;900&family=Barlow+Condensed:wght@400;700;900&display=swap');
 @import 'tailwindcss';
 
+@theme {
+  --breakpoint-md: 960px;
+}
+
 /* Fallback mappings for blocked Clash fonts */
 .font-clash-medium, [class*="font-['Clash_Grotesk:Medium'"] {
   font-family: 'DM Sans', sans-serif;
