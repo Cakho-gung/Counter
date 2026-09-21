@@ -530,9 +530,9 @@ function HeaderNavbar({ todayCount, loadingState, setLoadingState }: { todayCoun
           ${loadingState === "loading" ? "opacity-100" : (isLoaded ? "opacity-100" : "opacity-0")}
           ${loadingState === "done" ? "transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]" : "transition-all duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]"}
           ${loadingState === "loading" ? "w-[100vw] h-[100vh] top-0 rounded-none cursor-pointer max-w-[100vw]" :
-            isMobile
-              ? "w-[100vw] h-[56px] max-w-[100vw] rounded-none top-0"
-              : (isScrolled ? "w-[100vw] h-[56px] max-w-[100vw] rounded-none top-0" : "w-[85%] max-w-[1088px] h-[56px] rounded-[0_0_99px_99px] top-[100px]")}
+              isMobile
+                ? "w-[100vw] h-[56px] max-w-[100vw] rounded-none top-0"
+                : (isScrolled ? "w-[100vw] h-[56px] max-w-[100vw] rounded-none top-0" : "w-[85%] max-w-[1088px] h-[56px] rounded-[0_0_99px_99px] top-[100px]")}
         `}
         >
           {/* Loading Background Canvas (Rain) - Fixed to viewport, clipped by shrinking parent */}
@@ -547,14 +547,14 @@ function HeaderNavbar({ todayCount, loadingState, setLoadingState }: { todayCoun
               {/* Left group: Counter + Text. Stacked during loading, inline during bar */}
               <div className={`relative origin-left flex items-center
                 ${loadingState === "done" ? "transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]" : "transition-all duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]"}
-                ${loadingState === "loading" ? "scale-[1.9]" : "scale-100"}
+                ${loadingState === "loading" ? "scale-[1.4]" : "scale-100"}
               `}>
                 {/* Invisible spacer to reserve width for the flex container so 'See how' aligns properly */}
                 <div className="opacity-0 pointer-events-none flex items-center" aria-hidden="true">
-                  <div className="shrink-0 w-[95px] h-[28px]" /> {/* Approx counter width/height */}
-                  <div className="flex flex-col ml-[12px]">
-                    <p className="font-medium text-[14px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
-                    <p className="font-medium text-[14px] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>{`AusPen's slowing it down.`}</p>
+                  <div className="shrink-0 w-[155px] h-[28px]" /> {/* Approx counter width/height */}
+                  <div className="flex flex-col ml-[8px]">
+                    <p className="font-medium text-[clamp(11px,2.8vw,14px)] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
+                    <p className="font-medium text-[clamp(11px,2.8vw,14px)] leading-snug" style={{ fontFamily: "'DM Sans', sans-serif" }}>{`AusPen's slowing it down.`}</p>
                   </div>
                 </div>
 
@@ -563,7 +563,7 @@ function HeaderNavbar({ todayCount, loadingState, setLoadingState }: { todayCoun
                   <div className="relative inline-flex items-center">
                     {/* Initial Load Fade-in Wrapper */}
                     <div className={`transition-all duration-[800ms] delay-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[20px]"}`}>
-                      <div className={`origin-left transition-transform duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)] ${loadingState === "loading" ? "scale-[1.5]" : "scale-100"}`}>
+                      <div className={`origin-left transition-transform duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)] ${loadingState === "loading" ? "scale-[1.2]" : "scale-100"}`}>
                         <OdometerCounter
                           value={todayCount}
                           color="#FF5927"
@@ -578,14 +578,14 @@ function HeaderNavbar({ todayCount, loadingState, setLoadingState }: { todayCoun
                         />
                       </div>
                     </div>
-                    
+
                     {/* Animated Text: stacked below in loading, inline right in sticky bar */}
                     <div className={`absolute transition-all duration-[1200ms] ease-[cubic-bezier(0.7,0,0.3,1)]
-                      ${loadingState === "loading" ? "left-0 top-[100%] mt-[20px] translate-y-0" : "left-[100%] ml-[12px] top-1/2 -translate-y-1/2"}
+                      ${loadingState === "loading" ? "left-0 top-[100%] mt-[20px] translate-y-0" : "left-[100%] ml-[8px] top-1/2 -translate-y-1/2"}
                     `}>
                       <div className="flex flex-col">
-                        <p className={`font-medium text-[14px] text-white whitespace-nowrap leading-snug transition-all duration-[800ms] delay-[1000ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
-                        <p className={`font-medium text-[14px] text-white whitespace-nowrap leading-snug transition-all duration-[800ms] delay-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "translate-y-[10px] opacity-0"}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>{`AusPen's slowing it down.`}</p>
+                        <p className={`font-medium text-[clamp(11px,2.8vw,14px)] text-white whitespace-nowrap leading-snug transition-all duration-[800ms] delay-[1000ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>Markers landfilled in the US today</p>
+                        <p className={`font-medium text-[clamp(11px,2.8vw,14px)] text-white whitespace-nowrap leading-snug transition-all duration-[800ms] delay-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${isLoaded ? "opacity-100 translate-y-0" : "translate-y-[10px] opacity-0"}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>{`AusPen's slowing it down.`}</p>
                       </div>
                     </div>
                   </div>
@@ -593,9 +593,9 @@ function HeaderNavbar({ todayCount, loadingState, setLoadingState }: { todayCoun
               </div>
 
               {/* "See how ↓" — slides in after loading state ends */}
-              <div className={`shrink-0 transition-all duration-[500ms] delay-[300ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+              <div className={`shrink-0 pt-[12px] transition-all duration-[500ms] delay-[300ms] ease-[cubic-bezier(0.25,1,0.5,1)]
                 ${loadingState !== "loading" ? "opacity-100 translate-x-0" : "opacity-0 translate-x-[20px]"}`}>
-                <span className="font-semibold text-[16px] whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif", color: "#FF8F27" }}>
+                <span className="font-semibold text-[clamp(12px,3.5vw,16px)] whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif", color: "#FF8F27" }}>
                   See how ↓
                 </span>
               </div>
